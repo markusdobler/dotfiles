@@ -1,0 +1,5 @@
+[user]
+	email = mail@markusdobler.de
+	name = Markus Dobler
+[push]
+	default = simple

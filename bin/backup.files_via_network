@@ -1,0 +1,79 @@
+#! /bin/bash
+
+# backup:
+# backups a list of directories
+
+
+# INSTALL:
+# create new backup directory on server:
+#  nas-6E-FB-DE:/backup# mkdir backup_newton
+#  nas-6E-FB-DE:/backup# cd backup_newton/
+#  nas-6E-FB-DE:/backup/backup_newton# mkdir empty
+#  nas-6E-FB-DE:/backup/backup_newton# ln -s empty/ current
+# run this script
+
+TARGET_HOST=root@192.168.0.6
+backup_root="/backup/backup_${HOSTNAME}"
+
+# helper functions
+
+# die -- write error message (parameter #1) and exit with status 1
+function die {
+    echo -n "ERROR: "
+    echo $1 1>&2
+    exit 1
+}
+
+# check that backup directory exists
+#test -d "$backup_root" || die "target '$backup_root' not found"
+
+last_backup="$backup_root/current/"
+now=$(date +%Y-%m-%d.%H-%M-%S)
+new_backup="$backup_root/$now"
+
+
+# assert that (1) last backup is a directory and
+#             (2) new backup dir doesn't exist yet
+ssh $TARGET_HOST test -d "$last_backup" || die "expected '$last_backup' to be a directory containing the last backup"
+ssh $TARGET_HOST mkdir "$new_backup" || die "backup directory $new_backup already existed"
+ssh $TARGET_HOST ln -sf "$now" "$backup_root/new"
+
+
+# 2do:
+#  * store backupdirs somewhere else
+while read source exclude
+    do
+    # make sure there is exactly one trailing slash at the end of source
+    source=$(echo "$source/" | sed "s,/*$,/,")
+    
+    # convert slashes to underscores, remove first and last slash
+    dir="$(echo $source | sed "s,/,_,g; s/^_\+//; s/_\+$//")/"
+    target="$TARGET_HOST:$backup_root/new/$dir"
+    compare_dest="../../current/$dir"
+    
+    # process ex/include list
+    exclude=$(echo "$exclude" | sed "s/-/--exclude=/g; s/+/--include=/g")
+
+    echo $exclude
+    verbose="--verbose --progress"
+    verbose="--verbose"
+
+    echo "backing up '$source' to '$target' using '$compare_dest'"
+    rsync --archive \
+        --recursive \
+        --compress \
+        --update \
+        --hard-links \
+        --one-file-system \
+        --numeric-ids \
+        --delete-after \
+        $verbose \
+        $exclude \
+	    "$source" "$target" \
+        --link-dest="$compare_dest" \
+        || die "failed to backup '$source'"
+done < "${HOME}/.backupdirs.${HOSTNAME}"
+
+# update 'current' link
+ssh $TARGET_HOST rm "$backup_root/current"
+ssh $TARGET_HOST mv "$backup_root/new" "$backup_root/current"

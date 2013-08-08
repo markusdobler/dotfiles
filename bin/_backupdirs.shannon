@@ -1,0 +1,6 @@
+/home/sfoo/.thunderbird/zblwijju.default/ImapMail -*Trash*  -*Junk*
+/home/sfoo/.mozilla/firefox/zpvybx2x.default -*CACHE* -*Cache* -*cache*
+/home/sfoo/wip -nobackup
+/home/sfoo/src/  -~*  -*~  -*.o  -*.bak  -*.pyc  -a.out
+/home/sfoo/ -.ssh  +.bash*  +/bin  +/bin**  +/.vim**  -*
+/etc -*passwd* -*shadow* -private -refpolicy?targeted -*host*key* -*.gpg* -sudoers* -*.lock -/cups/ssl -/cups/classes.conf -/at.deny -/group? -/identd.key -/X11/Xwrapper.config -/cups/subscriptions.conf* -printers.conf* -/vpnc -/*lock -selinux -chap-secrets -pap-secrets -ufw -apparmor.d -fuse.conf -/NetworkManager/system?connections -/ppp/chap?secrets -/ppp/pap?secrets

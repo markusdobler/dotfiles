@@ -1,0 +1,37 @@
+# displays a status bar at the bottom
+#
+# %{=}%{dd}  -- set colors and color attributes to defaults
+# %H%{dc}> -- hostname and (in cyan) '>'
+# %0L=%< -- do not truncate anything befor this marker
+# %{dd}%-w%{dr} -- list windows before current window
+# %45L> -- if the windowlist must be truncated, try to position this marker
+#   at 45% of the window's width
+# [%{dd}%n %t%{dr}] -- current window, with red '[]' marks
+# %{dd}%+w -- list windows after current window
+# %-7= truncate/pad up to seven characters from right border (for clock)
+# %{dc}~%{dd}%c -- '~' (in cyan) and clock in 24hr format
+caption always "%{=}%{dd}%H%{dc}> %0L=%<%{dd}%-w%{dr}%45L>[%{dd}%n %t%{dr}]%{dd}%+w%-7= %{dc}~%{dd}%c"
+
+# disable splash screen
+startup_message off
+
+# big scrollback buffer
+defscrollback 10000
+
+# detach on hangup (on by default)
+autodetach on
+
+# switching between screen windows (default ctrl-a n, ctrl-a p)
+# note: determined keycodes with 'read'
+bindkey ^[[1;2D prev # previous with shift-Left arrow
+bindkey ^[[1;2C next # next with shift-Right arrow
+
+# use bash as shell
+shell /bin/bash
+
+# takes the current program title from zsh preexec
+shelltitle "$ |bash"
+
+# allows scrolling in gnome-terminal (with C-S-[Up/Down/PgU/PgD] and scrollbar)
+# mouse scroll wheel just scrolls command history
+termcapinfo xterm ti@:te@

@@ -1,0 +1,29 @@
+MAILDIR=/var/local/mail/dobler
+
+# forward a copy to private mail address
+:0 c
+* .*
+! info-tue-fwd@markusdobler.de
+
+# WSI-Ubuntu status mails
+:0
+* ^To:.*root.*informatik.uni-tuebingen.de
+* ^From:.*informatik.uni-tuebingen.de
+lists/ti-admin/.
+
+# mails on PCs upgraded to 10.10 bounce -> filter those bounces
+:0 HB
+* ^To:.*root@localhost.localdomain
+* ^From:.*MAILER-DAEMON@informatik.uni-tuebingen.de
+* ^from (fender|chimera) \[127.0.0.1\]
+* (reason: 550 5.1.8 <root@localhost.localdomain>: Sender address rejected: Domain not found)
+lists/ti-admin/.
+
+# TI-SVN commits and account confirmations
+:0
+* ^X-Subversion:
+lists/svn-commits/.
+:0
+* ^From: dobler@informatik.uni-tuebingen.de$
+* ^Subject: Subversion Zugang$
+lists/svn-commits/.

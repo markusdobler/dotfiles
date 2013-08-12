@@ -1,3 +1,5 @@
+#! /bin/bash
+
 git subtree pull --prefix _vim/bundle/vim-fugitive https://github.com/tpope/vim-fugitive.git master --squash
 git subtree pull --prefix _vim/bundle/tagbar https://github.com/markusdobler/tagbar master --squash
 git subtree pull --prefix _vim/bundle/vim-colors-solarized https://github.com/markusdobler/vim-colors-solarized.git master --squash

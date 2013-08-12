@@ -1,3 +1,5 @@
+#! /bin/bash
+
 case $# in
 	1 )
 		path=$1
@@ -31,8 +33,8 @@ echo "some sanity checks to make sure we're in the right repository"
 pwd
 echo "adding branch ${remote_branch} of ${path} as subtree in _vim/bundle/${name}"
 git subtree add --prefix _vim/bundle/${name} ${path} ${remote_branch} --squash
-if [ $? -gt 0 ]; then
-	exitcode=$?
+exitcode=$?
+if [ ${exitcode} -gt 0 ]; then
 	echo "failed to add subtree, exit code: ${exitcode}"
 	exit ${exitcode}
 else

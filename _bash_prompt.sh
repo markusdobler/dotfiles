@@ -131,7 +131,7 @@ function get_hg_bookmark_or_branch () {
 		branch="<unknown branch>"
 	fi
 	# Mark branch yellow if not a head revision (and no bookmark)
-	local id=$(echo "$hg_summary" | grep -e "^parent:" | sed 's/^parent:.*://' 2> /dev/null)
+	local id=$(echo "$hg_summary" | grep -e "^parent:" | sed 's/^parent:.*:\([0-9a-f]\+\).*/\1/' 2> /dev/null)
 	#   Check whether id is in list of heads
 	hg heads | grep changeset | grep -q ${id}
 	local id_in_heads=$?

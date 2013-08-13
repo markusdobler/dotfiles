@@ -1,11 +1,11 @@
 MAILDIR=/var/local/mail/dobler
 
-# forward a copy to private mail address
-:0 c
-* .*
-! info-tue-fwd@markusdobler.de
+# sort Spam to junk folder
+:0
+* ^Subject: \*\*\*SPAM\*\*\* .*
+Junk/.
 
-# WSI-Ubuntu status mails
+# WSI-Linux status mails -- don't forward those
 :0
 * ^To:.*root.*informatik.uni-tuebingen.de
 * ^From:.*informatik.uni-tuebingen.de
@@ -18,6 +18,23 @@ lists/ti-admin/.
 * ^from (fender|chimera) \[127.0.0.1\]
 * (reason: 550 5.1.8 <root@localhost.localdomain>: Sender address rejected: Domain not found)
 lists/ti-admin/.
+# logs from 'Line Printer Admin'
+:0
+* ^Delivered-To: root-ti@informatik.uni-tuebingen.de
+* ^From: Line Printer Admin.*
+lists/ti-admin/.
+# logs from 'Line Printer Admin'
+:0
+* ^Delivered-To: ti-staff-owner@informatik.uni-tuebingen.de
+* ^Subject: [ti-staff: Moderator interaction required!].*
+lists/ti-admin/.
+
+
+
+# forward a copy to private mail address
+:0 c
+* .*
+! info-tue-fwd@markusdobler.de
 
 # TI-SVN commits and account confirmations
 :0
@@ -27,3 +44,9 @@ lists/svn-commits/.
 * ^From: dobler@informatik.uni-tuebingen.de$
 * ^Subject: Subversion Zugang$
 lists/svn-commits/.
+
+# vacation -- out of office message
+# Uses ~/.vacation.msg and needs ~/mailspool/.vacation.{pag,dir}
+# :0 c
+# * ^To:.*dobler@informatik.uni-tuebingen.de
+# | vacation -a dobler@informatik.uni-tuebingen.de dobler

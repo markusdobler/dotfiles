@@ -141,12 +141,12 @@ if !exists('g:softtabstops_restore_original_map')
 endif
 
 noremap <script> <silent> <Plug>SoftTabSetup :call softtabstops#ShowTabEditor()<CR>
-if (! exists("no_plugin_maps") || ! no_plugin_maps) &&
-      \ (! exists("no_softtabstops_maps") || ! no_softtabstops_maps)
-  if !hasmapto('<Plug>SoftTabSetup', 'n')
-    nmap <unique> <silent> <F6> <Plug>SoftTabSetup
-  endif
-endif
+"if (! exists("no_plugin_maps") || ! no_plugin_maps) &&
+"      \ (! exists("no_softtabstops_maps") || ! no_softtabstops_maps)
+"  if !hasmapto('<Plug>SoftTabSetup', 'n')
+"    nmap <unique> <silent> <F6> <Plug>SoftTabSetup
+"  endif
+"endif
 
 command! -bang STEdit :call softtabstops#ShowTabEditor('<bang>' == '!' ? 1 : 0)
 command! -bang STEditor :STEdit<bang> <args>

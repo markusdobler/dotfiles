@@ -53,8 +53,9 @@ set mousemodel=popup      " show a context menu if clicking in selection
 "        show "…" at beginning and end of lines that go beyond the screen
 "        reduce contrast of these items
 if has("gui_running")
-	colorscheme wombat
+	"colorscheme wombat
 	colorscheme solarized
+	set background=dark
 
 	set list listchars=tab:»·,trail:·,precedes:…,extends:…,nbsp:‗
 	highlight SpecialKey guibg=bg
@@ -155,8 +156,8 @@ cmap w!! %!sudo tee > /dev/null %
 " undofile - This allows you to use undos after exiting and restarting
 " This, like swap and backups, uses .vim-undo first, then ~/.vim/undo
 if exists("+undofile")
-if isdirectory($HOME . '/.vim/undo') == 0
-	:silent !mkdir -p ~/.vim/undo
+	if isdirectory($HOME . '/.vim/undo') == 0
+		:silent !mkdir -p ~/.vim/undo
 	endif
 	set undodir=./.vim-undo//
 	set undodir+=~/.vim/undo//
@@ -212,3 +213,33 @@ let g:tagbar_type_scala = {
         \ 'm:methods'
     \ ]
 \ }
+
+" diverse key mappings
+
+" Repeat last recorded macro
+map Q @@
+" Reselect visual block after indent/outdent 
+vnoremap < <gv
+vnoremap > >gv
+" Easy split navigation
+nnoremap <C-h> <C-w>h
+nnoremap <C-j> <C-w>j
+nnoremap <C-k> <C-w>k
+nnoremap <C-l> <C-w>l
+" Force Saving Files that Require Root Permission
+cmap w!! %!sudo tee > /dev/null %
+
+" ctrl-l clears search highlighting
+if exists(":nohls")
+  nnoremap <silent> <C-L> :nohls<CR><C-L>
+endif
+
+" F5 -- refresh
+map <F6> :GundoToggle<CR>
+map <F7> :TagbarToggle<CR>
+map <F8> :SyntasticToggleMode<CR>
+map <F9> :wa<Bar>make<CR>
+
+" ctrl-g ctrl-t inserts current time stamp, with a menu to select different
+" formats
+inoremap <silent> <C-G><C-T> <C-R>=repeat(complete(col('.'),map(["%Y-%m-%d %H:%M:%S","%Y-%m-%d","%H:%M:%S","%a, %d %b %Y %H:%M:%S %z","%a %b %d %T %Z %Y"],'strftime(v:val)')+[localtime()]),0)<CR>

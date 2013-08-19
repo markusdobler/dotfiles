@@ -106,8 +106,11 @@ fi
 # otherwise initialize virtualenvwrapper
 if [ "$VIRTUAL_ENV" ]; then
 	source $VIRTUAL_ENV/bin/activate;
-elif [ -x /usr/local/bin/virtualenvwrapper.sh ]; then
-	source /usr/local/bin/virtualenvwrapper.sh
+else
+	venvwrapper=$(which virtualenvwrapper.sh)
+	if [ -x "${venvwrapper}" ]; then
+		source "${venvwrapper}"
+	fi
 fi
 
 if [ -x ~/.bashrc.local ]; then

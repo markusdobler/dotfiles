@@ -1,5 +1,6 @@
 set nocompatible " enable non-vi features
 call pathogen#infect()
+call pathogen#helptags()
 
 set backspace=2   " erlaubt das Löschen mit [BS] und [DEL] über das Zeilenende, Indent und Insertstart
 " set fileformat=unix   " damit vermeidet man EOL und EOF Probleme, wenn diese Dateien von anderen OS kommen

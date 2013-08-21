@@ -189,6 +189,7 @@ function set_virtualenv () {
 function set_bash_prompt () {
 	local last_exit_status=$?
 	local bold underline standout normal black red green yellow blue magenta cyan white
+	ORIGTERM="${TERM}"
 	local TERM
 	local USER AT HOST COLON DIR RESET SPACE PROMPT_SYMBOL PYTHON_VIRTUALENV VCS
 
@@ -206,7 +207,17 @@ function set_bash_prompt () {
 	RESET="${normal}"
 	SPACE=" "
 
-	SET_TERMINAL_TITLE="\[\033]0;\u@\h: \w\007\]"   # TODO: does this work with all terminals?
+	case $ORIGTERM in
+		screen | xterm | xterm-256color | gnome-256color )
+			SET_TERMINAL_TITLE="\[\033]0;\u@\h: \w\007\]"
+				;;
+		screen.linux | linux )
+			SET_TERMINAL_TITLE=""
+			;;
+		* )
+			SET_TERMINAL_TITLE="<try to set or unset terminal title in ~/.bash_prompt>"
+			;;
+	esac
 
 	PS1="${SET_TERMINAL_TITLE}${PYTHON_VIRTUALENV}${USER}${AT}${HOST}${COLON}${DIR}"
 	PS1="${PS1}${VCS}${PROMPT_SYMBOL}${RESET}${SPACE}"

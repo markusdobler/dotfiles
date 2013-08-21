@@ -1,0 +1,35 @@
+[org/compiz]
+existing-profiles=['Default', 'unity']
+current-profile='unity'
+
+[org/compiz/profiles/Default/plugins/core]
+active-plugins=['core', 'composite', 'opengl', 'compiztoolbox', 'decor', 'vpswitch', 'snap', 'mousepoll', 'resize', 'place', 'move', 'wall', 'grid', 'regex', 'imgpng', 'session', 'gnomecompat', 'animation', 'fade', 'workarounds', 'scale', 'expo', 'ezoom']
+
+[org/compiz/profiles/unity]
+plugins-with-set-keys=['expo', 'composite', 'decor', 'fade', 'place', 'unityshell', 'move', 'resize', 'vpswitch', 'gnomecompat', 'scale', 'core', 'mousepoll', 'wall', 'grid', 'animation', 'session', 'snap', 'ezoom', 'opengl', 'workarounds', 'unitymtgrabhandles']
+
+[org/compiz/profiles/unity/plugins/wall]
+thumb-highlight-gradient-shadow-color='#dfdfdfff'
+arrow-base-color='#e6e6e6d9'
+arrow-shadow-color='#dcdcdcd9'
+
+[org/compiz/profiles/unity/plugins/decor]
+active-shadow-color='#00000080'
+inactive-shadow-color='#000000ff'
+
+[org/compiz/profiles/unity/plugins/core]
+active-plugins=['core', 'composite', 'opengl', 'decor', 'place', 'move', 'resize', 'vpswitch', 'gnomecompat', 'imgpng', 'compiztoolbox', 'mousepoll', 'wall', 'grid', 'session', 'snap', 'regex', 'copytex', 'unitymtgrabhandles', 'animation', 'workarounds', 'expo', 'fade', 'scale', 'ezoom', 'unityshell']
+
+[org/compiz/profiles/unity/plugins/gnomecompat]
+main-menu-key='Disabled'
+run-key='Disabled'
+
+[org/compiz/profiles/unity/plugins/animation]
+unminimize-effects=['animation:Glide 2']
+
+[org/compiz/profiles/unity/plugins/expo]
+ground-color1='#b3b3b3cc'
+ground-color2='#b3b3b300'
+
+[com/canonical/unity/launcher]
+favorites=['application://ubiquity-gtkui.desktop', 'application://nautilus.desktop', 'application://firefox.desktop', 'application://libreoffice-writer.desktop', 'application://libreoffice-calc.desktop', 'application://libreoffice-impress.desktop', 'application://ubuntu-software-center.desktop', 'application://ubuntuone-installer.desktop', 'application://ubuntu-amazon-default.desktop', 'application://UbuntuOneMusiconeubuntucom.desktop', 'application://gnome-control-center.desktop', 'unity://running-apps', 'unity://expo-icon', 'unity://devices']

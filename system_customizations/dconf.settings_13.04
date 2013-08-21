@@ -1,0 +1,108 @@
+# usage:
+#
+#   #grep -v "^#" | <this_file> | dconf load /
+
+
+# don't ask whether Ubuntu should install those 'apps'
+[com/canonical/unity/webapps]
+dontask-domains=['reddit.com', 'tumblr.com', 'plus.google.com', 'youtube.com', 'launchpad.net', 'twitter.com', 'docs.google.com', 'facebook.com', 'apps.facebook.com']
+
+# don't let lenses search remote content
+[com/canonical/unity/lenses]
+remote-content-search='none'
+
+
+
+# settings for touchpad: no tap, use two-finger-scroll
+[org/gnome/settings-daemon/peripherals/touchpad]
+scroll-method='two-finger-scrolling'
+horiz-scroll-enabled=true
+tap-to-click=false
+
+# set numlock on
+[org/gnome/settings-daemon/peripherals/keyboard]
+numlock-state='on'
+
+
+
+# power timings -- when to dim display, etc.
+[org/gnome/settings-daemon/plugins/power]
+time-low=600
+idle-dim-time=90
+lid-close-battery-action='suspend'
+sleep-inactive-battery-timeout=1800
+
+
+
+# open terminal with ctrl-alt-enter
+[org/gnome/settings-daemon/plugins/media-keys]
+custom-keybindings=['/org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0/']
+terminal='<Primary><Alt>Return'
+
+#  open terminal with ctrl-alt-t
+[org/gnome/settings-daemon/plugins/media-keys/custom-keybindings/custom0]
+binding='<Primary><Alt>t'
+command='gnome-terminal'
+name='Terminal'
+
+
+
+
+# gedit: show status bar + tabs
+[org/gnome/gedit/preferences/ui]
+statusbar-visible=true
+notebook-show-tabs-mode='always'
+
+# nautilus: always use a textual input entry for the location toolbar, instead of the pathbar
+[org/gnome/nautilus/preferences]
+always-use-location-entry=true
+
+
+
+
+# "Expose"-like display of all windows
+[org/compiz/profiles/unity/plugins/scale]
+spacing=0
+opacity=70
+initiate-all-edge=''
+initiate-edge='TopLeft|TopRight'
+overlay-icon=1
+speed=2.0
+
+
+# virtual desktops wrap around
+[org/compiz/profiles/unity/plugins/wall]
+allow-wraparound=true
+
+# set virtual desktop layout to 4x1
+[org/compiz/profiles/unity/plugins/core]
+hsize=4
+vsize=1
+
+
+# configure launcher ("Dock")
+launcher-capture-mouse=false
+launcher-opacity=0.63440859317779541
+num-launchers=1
+launcher-hide-mode=1
+
+# programs in dock
+[com/canonical/unity/launcher]
+favorites=['application://firefox.desktop', 'application://thunderbird.desktop', 'application://gnome-terminal.desktop', 'unity://running-apps', 'application://nemo.desktop', 'unity://devices', 'application://gnome-control-center.desktop']
+
+
+# configure switcher plugin (alt-tab) # needs compiz-plugins-extra
+[org/compiz/profiles/unity/plugins/switcher]
+focus-on-switch=true
+zoom=0.0
+
+# disable alt-tab from unity shell
+[org/compiz/profiles/unity/plugins/unityshell]
+alt-tab-forward-all='Disabled'
+alt-tab-prev-all='Disabled'
+alt-tab-forward='Disabled'
+alt-tab-prev='Disabled'
+
+# add switcher to active plugins
+[org/compiz/profiles/unity/plugins/core]
+active-plugins=['core', 'composite', 'opengl', 'decor', 'move', 'resize', 'regex', 'compiztoolbox', 'imgpng', 'place', 'grid', 'copytex', 'session', 'animation', 'mousepoll', 'unitymtgrabhandles', 'gnomecompat', 'snap', 'vpswitch', 'workarounds', 'wall', 'expo', 'ezoom', 'fade', 'scale', 'switcher', 'unityshell']

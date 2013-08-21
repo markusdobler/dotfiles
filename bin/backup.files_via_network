@@ -12,8 +12,24 @@
 #  nas-6E-FB-DE:/backup/backup_newton# ln -s empty/ current
 # run this script
 
-TARGET_HOST=root@192.168.0.6
-backup_root="/backup/backup_${HOSTNAME}"
+case $HOSTNAME in
+    pogo )
+        # copy to local partition
+        TARGET_HOST=""
+        backup_root="/local/dobler/backup/backup_${HOSTNAME}"
+        function target_exec () {
+            echo $*
+            $*
+        }
+        ;;
+    * )
+        TARGET_HOST="root@192.168.0.6"
+        backup_root="/backup/backup_${HOSTNAME}"
+        function target_exec () {
+            ssh $TARGET_HOST $*
+        }
+        ;;
+esac
 
 # helper functions
 
@@ -34,9 +50,10 @@ new_backup="$backup_root/$now"
 
 # assert that (1) last backup is a directory and
 #             (2) new backup dir doesn't exist yet
-ssh $TARGET_HOST test -d "$last_backup" || die "expected '$last_backup' to be a directory containing the last backup"
-ssh $TARGET_HOST mkdir "$new_backup" || die "backup directory $new_backup already existed"
-ssh $TARGET_HOST ln -sf "$now" "$backup_root/new"
+target_exec test -d "$last_backup" || die "expected '$last_backup' to be a directory containing the last backup"
+target_exec mkdir "$new_backup" || die "backup directory $new_backup already existed"
+target_exec unlink "$backup_root/new"
+target_exec ln -sf "$now" "$backup_root/new"
 
 
 # 2do:
@@ -48,7 +65,7 @@ while read source exclude
     
     # convert slashes to underscores, remove first and last slash
     dir="$(echo $source | sed "s,/,_,g; s/^_\+//; s/_\+$//")/"
-    target="$TARGET_HOST:$backup_root/new/$dir"
+    target=$(echo "$TARGET_HOST:$backup_root/new/$dir" | sed 's/^://')
     compare_dest="../../current/$dir"
     
     # process ex/include list
@@ -57,6 +74,7 @@ while read source exclude
     echo $exclude
     verbose="--verbose --progress"
     verbose="--verbose"
+    #verbose=""
 
     echo "backing up '$source' to '$target' using '$compare_dest'"
     rsync --archive \
@@ -69,11 +87,11 @@ while read source exclude
         --delete-after \
         $verbose \
         $exclude \
-	    "$source" "$target" \
+        "$source" "$target" \
         --link-dest="$compare_dest" \
         || die "failed to backup '$source'"
 done < "${HOME}/.backupdirs.${HOSTNAME}"
 
 # update 'current' link
-ssh $TARGET_HOST rm "$backup_root/current"
-ssh $TARGET_HOST mv "$backup_root/new" "$backup_root/current"
+target_exec rm "$backup_root/current"
+target_exec mv "$backup_root/new" "$backup_root/current"

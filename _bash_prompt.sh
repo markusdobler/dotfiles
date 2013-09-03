@@ -51,16 +51,62 @@ function is_git_repository {
 	git branch > /dev/null 2>&1
 }
 
-function get_git_changes () {
-	# How many files are in the staging area (s), modified in the working tree (w) and untracked (u) ?
-	local git_status_porc="$(git status --porcelain 2> /dev/null)"
-	local git_changes_staging_area=$(echo "$git_status_porc" | grep -e "^[MADRC]." | wc -l 2> /dev/null)
-	local git_changes_working_tree=$(echo "$git_status_porc" | grep -e "^.[DM]" | wc -l 2> /dev/null)
-	local git_changes_untracked=$(echo "$git_status_porc" | grep -e '??' | wc -l 2> /dev/null)
 
-	[[ $git_changes_staging_area -gt 0 ]] && vcs_changes="${vcs_changes}${git_changes_staging_area}s"
-	[[ $git_changes_working_tree -gt 0 ]] && vcs_changes="${vcs_changes}${git_changes_working_tree}w"
-	[[ $git_changes_untracked -gt 0 ]] && vcs_changes="${vcs_changes}${git_changes_untracked}u"
+# see /etc/bash_completion.d/git -> __git_ps1
+function get_git_pending_operation () {
+	if [[ -d "$git_dir/rebase-apply" ]] ; then
+		if [[ -f "$git_dir/rebase-apply/rebasing" ]] ; then
+			git_op="rebase"
+		elif [[ -f "$git_dir/rebase-apply/applying" ]] ; then
+			git_op="am"
+		else
+			git_op="am/rebase"
+		fi
+	elif [[ -f "$git_dir/rebase-merge/interactive" ]] ; then
+		git_op="rebase -i"
+		# branch="$(cat "$git_dir/rebase-merge/head-name")"
+	elif [[ -d "$git_dir/rebase-merge" ]] ; then
+		git_op="rebase -m"
+		# ??? branch="$(cat "$git_dir/.dotest-merge/head-name")"
+		# lvv: not always works. Should ./.dotest be used instead?
+	elif [[ -f "$git_dir/MERGE_HEAD" ]] ; then
+		git_op="merge"
+		# ??? branch="$(git symbolic-ref HEAD 2>/dev/null)"
+	elif [[ -f "$git_dir/index.lock" ]] ; then
+		git_op="locked"
+	elif
+		[[ -f "$git_dir/BISECT_LOG" ]] ; then
+		git_op="bisect"
+		# ??? branch="$(git symbolic-ref HEAD 2>/dev/null)" || \
+		# branch="$(git describe --exact-match HEAD 2>/dev/null)" || \
+		# branch="$(cut -c1-7 "$git_dir/HEAD")..."
+	fi
+}
+
+function get_git_changes () {
+	local git_status_porc="$(git status --porcelain 2> /dev/null)"
+	case "$git_op" in
+		rebase* | am* | merge* )
+			# List conflicts (c), successful merges (m) and untracked files (u)
+			local git_changes_unmerged=$(echo "$git_status_porc" | grep -e "^[DAU][DAU]" | wc -l 2> /dev/null)
+			local git_changes_merged=$(echo "$git_status_porc" | grep -e "^[MADRC] " | wc -l 2> /dev/null)
+			local git_changes_untracked=$(echo "$git_status_porc" | grep -e '^??' | wc -l 2> /dev/null)
+			[[ $git_changes_unmerged -gt 0 ]] && vcs_changes="${vcs_changes}${magenta}${git_changes_unmerged}c${normal}"
+			[[ $git_changes_merged -gt 0 ]] && vcs_changes="${vcs_changes}${git_changes_merged}m"
+			[[ $git_changes_untracked -gt 0 ]] && vcs_changes="${vcs_changes}${git_changes_untracked}u"
+			;;
+
+		* )
+			# How many files are in the staging area (s), modified in the working tree (w) and untracked (u) ?
+			local git_changes_staging_area=$(echo "$git_status_porc" | grep -e "^[MADRC]." | wc -l 2> /dev/null)
+			local git_changes_working_tree=$(echo "$git_status_porc" | grep -e "^.[DM]" | wc -l 2> /dev/null)
+			local git_changes_untracked=$(echo "$git_status_porc" | grep -e '??' | wc -l 2> /dev/null)
+
+			[[ $git_changes_staging_area -gt 0 ]] && vcs_changes="${vcs_changes}${git_changes_staging_area}s"
+			[[ $git_changes_working_tree -gt 0 ]] && vcs_changes="${vcs_changes}${git_changes_working_tree}w"
+			[[ $git_changes_untracked -gt 0 ]] && vcs_changes="${vcs_changes}${git_changes_untracked}u"
+			;;
+	esac
 }
 
 function get_git_remote () {
@@ -83,30 +129,91 @@ function get_git_remote () {
 	vcs_additional="$remote"
 }
 
-function get_git_branch () {
-	# Get the name of the branch.
-	local branch_pattern="^# On branch ([^${IFS}]*)"
-	if [[ ${git_status} =~ ${branch_pattern} ]]; then
-		branch=${BASH_REMATCH[1]}
+function git_sha1_to_description () {
+	git describe --contains --all "$1" 2> /dev/null || git rev-parse --short "$1" 2> /dev/null || echo "<unknown>"
+}
+
+function git_ref_status () {
+	local symbol=${1:-HEAD}
+	if git symbolic-ref "$symbol" 1>/dev/null 2>/dev/null; then
+		echo "onbranch"
+	elif [[ -n $(git describe --contains --all "$symbol" 2>/dev/null) ]]; then
+		echo "contained"
 	else
+		echo "detached"
+	fi
+}
+
+function git_resolve_symbolic_ref () {
+	local branch_name symbol=${1:-HEAD}
+	branch_name="$(git symbolic-ref "$symbol" 2>/dev/null | sed 's!.*/!!')"
+	if [[ -z "$branch_name" ]]; then
 		# Not on a branch
-		# Try to find a branch that contains this commit, mark in yellow
-		branch=$(git describe --contains --all HEAD 2> /dev/null)
-		local error_code=$?
-		branch="${yellow}${branch}${normal}"
-		if [[ $error_code -gt 0 ]]; then
-			# Commit is completely detached, show SHA1 in red
-			branch=$(git rev-parse --short HEAD 2> /dev/null)
-			branch="${red}${branch}${normal}"
+		# Try to find a branch that contains this commit
+		branch_name=$(git describe --contains --all "$symbol" 2> /dev/null)
+		if [[ -z "$branch_name" ]]; then
+			# Commit is completely detached
+			branch_name=$(git rev-parse --short "$symbol" 2> /dev/null)
 		fi
 	fi
+	echo "${branch_name}"
+}
+
+function get_git_branch () {
+	# Get the name of the branch.
+	local branch_name branch_status
+	case "$git_op" in
+		merge )
+			branch="${bold}$(git_resolve_symbolic_ref HEAD)${normal}"
+			branch="${branch}|$(git_resolve_symbolic_ref MERGE_HEAD)"
+			;;
+
+		rebase )
+			local orig_head=$(cat "${git_dir}/rebase-apply/orig-head")
+			local onto=$(cat "${git_dir}/rebase-apply/onto")
+			branch="${bold}$(git_sha1_to_description $orig_head)${normal}"
+			branch="${branch}/$(git_sha1_to_description $onto)"
+			;;
+
+		"rebase -i" )
+			local orig_head=$(cat "${git_dir}/rebase-merge/orig-head")
+			local onto=$(cat "${git_dir}/rebase-merge/onto")
+			branch="${bold}$(git_sha1_to_description $orig_head)${normal}"
+			branch="${branch}>$(git_sha1_to_description $onto)"
+			;;
+
+		"bisect" )
+			branch="${git_op}@${bold}$(git_resolve_symbolic_ref HEAD)${normal}"
+			;;
+
+		'' )
+			branch_name=$(git_resolve_symbolic_ref HEAD)
+			case $(git_ref_status) in
+				"onbranch" )
+					branch="${branch_name}"
+					;;
+				"contained" )
+					branch="${yellow}${branch_name}${normal}"
+					;;
+				"detached" )
+					branch="${red}${branch_name}${normal}"
+					;;
+			esac
+			;;
+
+		* )
+			branch="${red}${git_op}${normal}"
+			;;
+	esac
 }
 
 function get_git_prompt_vars {
 	# Capture the output of the "git status" command.
 	local git_status="$(git status 2> /dev/null)"
-
+	local git_dir=$(git rev-parse --git-dir)
+	local git_op
 	vcs_symbol="±"
+	get_git_pending_operation
 	get_git_changes
 	get_git_remote
 	get_git_branch

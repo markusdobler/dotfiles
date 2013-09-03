@@ -23,9 +23,9 @@ call Pl#Hi#Allocate({
 
 let g:Powerline#Colorschemes#mdobler_wombat#colorscheme = Pl#Colorscheme#Init([
 	\ Pl#Hi#Segments(['SPLIT'], {
-		\ 'n': ['base3',  'base02'],
-		\ 'N': ['base3',  'base02'],
-		\ 'i': ['base3',  'base02'],
+		\ 'n': ['base3',  'base00'],
+		\ 'N': ['base3',  'base00'],
+		\ 'i': ['base3',  'base00'],
 		\ }),
 	\
 	\ Pl#Hi#Segments(['mode_indicator'], {
@@ -37,60 +37,60 @@ let g:Powerline#Colorschemes#mdobler_wombat#colorscheme = Pl#Colorscheme#Init([
 		\ }),
 	\
 	\ Pl#Hi#Segments(['branch'], {
-		\ 'n': ['base2',   'base02'],
-		\ 'N': ['base02',  'base02'],
+		\ 'n': ['base2',   'base00'],
+		\ 'N': ['base02',  'base00'],
 		\ 'i': ['base2',   'base00'],
 		\ }),
 	\
   \ Pl#Hi#Segments(['scrollpercent', 'raw', 'filesize'], {
-		\ 'n': ['cyan',   'base02'],
-		\ 'N': ['base00',  'base02'],
-		\ 'i': ['red',   'base02'],
+		\ 'n': ['cyan',   'base00'],
+		\ 'N': ['base0', 'base00'],
+		\ 'i': ['red',    'base00'],
 		\ }),
 	\
 	\ Pl#Hi#Segments(['fileinfo', 'filename'], {
-		\ 'n': ['base1',   'base02',   ['bold']],
-		\ 'N': ['base0',  'base02' ],
+		\ 'n': ['base02',  'base00',   ['bold']],
+		\ 'N': ['base02',  'base00' ],
 		\ }),
 	\
 	\ Pl#Hi#Segments(['fileinfo.filepath'], {
-		\ 'n': ['base0'],
-		\ 'N': ['base0'],
+		\ 'n': ['base0', 'base00'],
+		\ 'N': ['base0', 'base00'],
 		\ }),
 	\
 	\ Pl#Hi#Segments(['static_str'], {
 		\ 'n': ['base3',   'green'],
-		\ 'N': ['base01',  'base02'],
+		\ 'N': ['base01',  'base00'],
 		\ 'i': ['base3',   'blue'],
 		\ }),
 	\
 	\ Pl#Hi#Segments(['fileinfo.flags'], {
-		\ 'n': ['red', 'base02', ['bold']],
-		\ 'N': ['base0', 'base02'],
+		\ 'n': ['red', 'base00', ['bold']],
+		\ 'N': ['orange'],
 		\ 'i': ['red'],
 		\ }),
 	\
 	\ Pl#Hi#Segments(['currenttag', 'fileformat', 'fileencoding', 'pwd', 'filetype', 'rvm:string', 'rvm:statusline', 'virtualenv:statusline'], {
-		\ 'n': ['base00', 'base02'],
+		\ 'n': ['base0', 'base00'],
 		\ }),
 	\
 	\ Pl#Hi#Segments(['charcode', 'currhigroup'], {
-		\ 'n': ['base01', 'base02'],
+		\ 'n': ['base0', 'base00'],
 		\ }),
 	\
 	\ Pl#Hi#Segments(['lineinfo'], {
-		\ 'n': ['cyan',   'base02',  ['bold']],
-		\ 'N': ['base2',  'base02'],
-		\ 'i': ['red',  'base02', ['bold']],
+		\ 'n': ['cyan',   'base00',  ['bold']],
+		\ 'N': ['base0',  'base00'],
+		\ 'i': ['red',  'base00', ['bold']],
 		\ }),
 	\
 	\ Pl#Hi#Segments(['errors'], {
-		\ 'n': ['red',  'base2',  ['bold']],
+		\ 'n': ['red',  'base1',  ['bold']],
 		\ }),
 	\
 	\ Pl#Hi#Segments(['lineinfo.line.tot'], {
 		\ 'n': ['blue'],
-		\ 'N': ['base2'],
+		\ 'N': ['base0'],
 		\ 'i': ['yellow'],
 		\ }),
 	\
@@ -99,8 +99,8 @@ let g:Powerline#Colorschemes#mdobler_wombat#colorscheme = Pl#Colorscheme#Init([
 		\ }),
 	\
 	\ Pl#Hi#Segments(['gundo:static_str.name', 'command_t:static_str.name'], {
-		\ 'n': ['orange',   'base02',     ['bold']],
-		\ 'N': ['base1',  'base02',  ['bold']],
+		\ 'n': ['orange',   'base0',     ['bold']],
+		\ 'N': ['base01',  'base0',  ['bold']],
 		\ }),
 	\
 	\ Pl#Hi#Segments(['gundo:static_str.buffer', 'command_t:raw.line'], {

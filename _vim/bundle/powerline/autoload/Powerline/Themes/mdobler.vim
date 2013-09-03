@@ -1,9 +1,8 @@
 let g:Powerline#Themes#mdobler#theme = Pl#Theme#Create(
 	\ Pl#Theme#Buffer(''
+		\ , ['static_str.name', '']
 		\ , 'paste_indicator'
 		\ , 'mode_indicator'
-		\ , 'fugitive:branch'
-		\ , 'hgrev:branch'
 		\ , 'fileinfo'
 		\ , 'syntastic:errors'
 		\ , Pl#Segment#Truncate()

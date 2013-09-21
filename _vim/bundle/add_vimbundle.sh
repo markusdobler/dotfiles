@@ -40,5 +40,9 @@ if [ ${exitcode} -gt 0 ]; then
 else
 	echo "adding update command to _vim/bundle/update.sh:"
 	echo "git subtree pull --prefix _vim/bundle/${name} ${path} ${remote_branch} --squash" | tee -a _vim/bundle/update.sh
+	echo "adding updated update.sh to staging area"
+	git add _vim/bundle/update.sh
+	echo "amending commit"
+	git commit --amend --no-edit
 fi
 )

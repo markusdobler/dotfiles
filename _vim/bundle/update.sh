@@ -21,3 +21,4 @@ git subtree pull --prefix _vim/bundle/vcscommand.vim https://github.com/vim-scri
 git subtree pull --prefix _vim/bundle/vim-latex http://git.code.sf.net/p/vim-latex/vim-latex master --squash
 git subtree pull --prefix _vim/bundle/vim-css-color https://github.com/skammer/vim-css-color.git master --squash
 git subtree pull --prefix _vim/bundle/vim-css3-syntax https://github.com/hail2u/vim-css3-syntax.git master --squash
+git subtree pull --prefix _vim/bundle/vim-less https://github.com/groenewege/vim-less.git master --squash

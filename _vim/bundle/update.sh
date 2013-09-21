@@ -19,3 +19,4 @@ git subtree pull --prefix _vim/bundle/Vicle https://github.com/vim-scripts/Vicle
 git subtree pull --prefix _vim/bundle/genutils https://github.com/vim-scripts/genutils.git master --squash
 git subtree pull --prefix _vim/bundle/vcscommand.vim https://github.com/vim-scripts/vcscommand.vim.git master --squash
 git subtree pull --prefix _vim/bundle/vim-latex http://git.code.sf.net/p/vim-latex/vim-latex master --squash
+git subtree pull --prefix _vim/bundle/vim-css-color https://github.com/skammer/vim-css-color.git master --squash

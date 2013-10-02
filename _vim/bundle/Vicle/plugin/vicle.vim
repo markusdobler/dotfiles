@@ -525,7 +525,7 @@ function! Vicle_up_svars()
 
   if !exists('t:vicle_screen_sn') || !exists('t:vicle_screen_wn')
     echohl Identifier
-    let t:vicle_screen_sn = input('Session name: ', '', 'custom,Vicle_screen_sessions')
+    let t:vicle_screen_sn = input('Session name (`echo $STY`): ', '', 'custom,Vicle_screen_sessions')
     let t:vicle_screen_wn = input('Window number: ', '0')
     echohl None
   end

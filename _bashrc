@@ -122,3 +122,12 @@ fi
 alias fm4="mplayer mms://apasf.apa.at/fm4_live_worldwide"
 alias nautilus="nautilus --no-desktop"
 alias grep="grep --color"
+
+# create new directory and cd into it
+# by default, it fails in the same cases as mkdir (directory exitst, parent doesn't exists, ...)
+# if mkdir fails, this function doesn't try to change the directory
+# use `mkcd -p <directory>` to create more than one directory or to cd even if the directory already exists
+#   ( "$@" expands to all arguments, "$_" to the last argument, so you can pass arbitrary options to mkdir )
+function mkcd () {
+	mkdir "$@" && cd "$_"
+}

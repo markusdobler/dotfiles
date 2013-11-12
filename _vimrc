@@ -57,9 +57,9 @@ if has("gui_running")
 	"colorscheme wombat
 	colorscheme solarized
 	set background=dark
-
 	set list listchars=tab:»·,trail:·,precedes:…,extends:…,nbsp:‗
 	highlight SpecialKey guibg=bg
+	let g:solarized_visibility="low"
 endif
 
 if v:version < 700

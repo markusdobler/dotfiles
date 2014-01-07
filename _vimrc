@@ -215,6 +215,8 @@ let g:tagbar_type_scala = {
     \ ]
 \ }
 
+let g:hardtime_default_on = 1
+let g:hardtime_showmsg = 1
 " diverse key mappings
 
 " Repeat last recorded macro

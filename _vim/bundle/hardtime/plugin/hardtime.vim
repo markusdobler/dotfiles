@@ -9,13 +9,19 @@ endif
 let g:HardTime_loaded = 1
 
 " List of keys to block
+" hjkl is very hard mode -- don't remove just now
 if !exists("g:list_of_visual_keys")
-    let g:list_of_visual_keys = [ "h", "j", "k", "l", "-",
-                     \ "+","<UP>", "<DOWN>", "<LEFT>", "<RIGHT>"]
+"                     \ "h", "j", "k", "l", "-", "+",
+    let g:list_of_visual_keys = [
+                     \ "<UP>", "<DOWN>", "<LEFT>", "<RIGHT>"]
+endif
+if !exists("g:list_of_insert_keys")
+    let g:list_of_insert_keys = [ "<UP>", "<DOWN>", "<LEFT>", "<RIGHT>"]
 endif
 if !exists("g:list_of_normal_keys")
-    let g:list_of_normal_keys = [ "h", "j", "k", "l", "-",
-                     \ "+","<UP>", "<DOWN>", "<LEFT>", "<RIGHT>"]
+"                     \ "h", "j", "k", "l", "-", "+",
+    let g:list_of_normal_keys = [
+                     \ "<UP>", "<DOWN>", "<LEFT>", "<RIGHT>"]
 endif
 
 " Timeout in seconds between keystrokes
@@ -68,6 +74,9 @@ fun! HardTimeOn()
     for i in g:list_of_visual_keys
         exec "vnoremap <buffer> <silent> <expr> " . i . " TryKey() ? \"" . i . "\" : TooSoon()"
     endfor
+    for i in g:list_of_insert_keys
+        exec "inoremap <buffer> <silent> <expr> " . i . " TryKey() ? \"" . i . "\" : TooSoon()"
+    endfor
     if g:hardtime_showmsg
         echo "Hard time on"
     end
@@ -87,6 +96,9 @@ endf
 
 fun! TryKey()
     let now = GetNow()
+	if v:count > 0
+		return 1
+	end
     if now > s:lasttime + g:hardtime_timeout
         let s:lasttime = now
         return 1

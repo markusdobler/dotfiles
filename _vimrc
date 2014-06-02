@@ -55,11 +55,11 @@ set mousemodel=popup      " show a context menu if clicking in selection
 "        reduce contrast of these items
 if has("gui_running")
 	"colorscheme wombat
+	let g:solarized_visibility="low"
 	colorscheme solarized
 	set background=dark
 	set list listchars=tab:»·,trail:·,precedes:…,extends:…,nbsp:‗
-	highlight SpecialKey guibg=bg
-	let g:solarized_visibility="low"
+	"highlight SpecialKey guibg=bg
 endif
 
 if v:version < 700

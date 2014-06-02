@@ -180,6 +180,24 @@ endfunction
 " pyflakes currently not working on tango
 let b:did_pyflakes_plugin = 1
 
+" Setup vim-sneak
+let g:sneak#streak = 1
+let g:sneak#s_next = 1
+"replace 'f' with inclusive 1-char Sneak
+nmap f <Plug>Sneak_f
+nmap F <Plug>Sneak_F
+xmap f <Plug>Sneak_f
+xmap F <Plug>Sneak_F
+omap f <Plug>Sneak_f
+omap F <Plug>Sneak_F
+"replace 't' with exclusive 1-char Sneak
+nmap t <Plug>Sneak_t
+nmap T <Plug>Sneak_T
+xmap t <Plug>Sneak_t
+xmap T <Plug>Sneak_T
+omap t <Plug>Sneak_t
+omap T <Plug>Sneak_T
+
 " Setup vim-powerline
 let g:Powerline_symbols = 'compatible'
 let g:Powerline_stl_path_style = 'short'

@@ -8,3 +8,10 @@
 [core]
     pager = less -FRSX
     editor = vim
+
+[merge]
+    tool = threesome
+
+[mergetool "threesome"]
+    cmd = "gvim -f $BASE $LOCAL $REMOTE $MERGED -c 'ThreesomeInit'"
+    trustExitCode = true

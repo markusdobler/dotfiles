@@ -1,0 +1,14 @@
+HashKnownHosts no
+
+Host *
+  GSSAPIAuthentication no
+  ForwardAgent no
+	
+
+Host sshgw.informatik.uni-tuebingen.de
+  CheckHostIP no
+   
+Host ssh*.informatik.uni-tuebingen.de atreus.informatik.uni-tuebingen.de
+  ProxyCommand none
+Host *.informatik.uni-tuebingen.de
+  ProxyCommand ssh -l dobler -o ProxyCommand=none sshgw.informatik.uni-tuebingen.de connect %h %p

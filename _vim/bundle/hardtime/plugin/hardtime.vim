@@ -24,32 +24,43 @@ if !exists("g:list_of_normal_keys")
                      \ "<UP>", "<DOWN>", "<LEFT>", "<RIGHT>"]
 endif
 
-" Timeout in seconds between keystrokes
+" Allow to ignore certain buffer patterns.
+if !exists("g:hardtime_ignore_buffer_patterns")
+    let g:hardtime_ignore_buffer_patterns = []
+endif
+
+" Timeout in milliseconds between keystrokes
 if !exists("g:hardtime_timeout")
-    let g:hardtime_timeout = 1
+    let g:hardtime_timeout = 1000
 endif
 
 if !exists("g:hardtime_showmsg")
     let g:hardtime_showmsg = 0
 endif
 
+if !exists("g:hardtime_allow_different_key")
+    let g:hardtime_allow_different_key = 0
+endif
+
+if !exists("g:hardtime_maxcount")
+    let g:hardtime_maxcount = 1
+endif
+
 " Start hardtime in every buffer
 if exists("g:hardtime_default_on")
     if g:hardtime_default_on
-        autocmd! BufEnter * call s:HardTime()
+        autocmd BufRead,BufNewFile * call s:HardTime()
     endif
 endif
 
 let s:lasttime = 0
+let s:lastkey = ''
+let s:lastcount = 0
 
 fun! s:HardTime()
-    if !exists("b:hardtime_on")
-      let b:hardtime_on = g:hardtime_default_on
-    endif
-    if b:hardtime_on
+    let ignoreBuffer = s:IsIgnoreBuffer()
+    if !ignoreBuffer
       call HardTimeOn()
-    else
-      call HardTimeOff()
     endif
 endf
 
@@ -67,19 +78,25 @@ fun! HardTimeOff()
 endf
 
 fun! HardTimeOn()
-    let b:hardtime_on = 1
-    for i in g:list_of_normal_keys
-        exec "nnoremap <buffer> <silent> <expr> " . i . " TryKey() ? \"" . i . "\" : TooSoon()"
-    endfor
-    for i in g:list_of_visual_keys
-        exec "vnoremap <buffer> <silent> <expr> " . i . " TryKey() ? \"" . i . "\" : TooSoon()"
-    endfor
-    for i in g:list_of_insert_keys
-        exec "inoremap <buffer> <silent> <expr> " . i . " TryKey() ? \"" . i . "\" : TooSoon()"
-    endfor
-    if g:hardtime_showmsg
-        echo "Hard time on"
-    end
+    if !exists("b:hardtime_on")
+        let b:hardtime_on = 0
+    endif
+    " Prevents from mapping keys recursively
+    if b:hardtime_on == 0
+        let b:hardtime_on = 1
+        for i in g:list_of_normal_keys
+            exec "nnoremap <buffer> <silent> <expr> " . i . " TryKey('" . i . "') ? '" . (maparg(i, "n") != "" ? maparg(i, "n") : i) . "' : TooSoon()"
+        endfor
+        for i in g:list_of_visual_keys
+            exec "xnoremap <buffer> <silent> <expr> " . i . " TryKey('" . i . "') ? '" . (maparg(i, "v") != "" ? maparg(i, "v") : i) . "' : TooSoon()"
+        endfor
+        for i in g:list_of_insert_keys
+            exec "inoremap <buffer> <silent> <expr> " . i . " TryKey('" . i . "') ? '" . (maparg(i, "v") != "" ? maparg(i, "v") : i) . "' : TooSoon()"
+        endfor
+        if g:hardtime_showmsg
+            echo "Hard time on"
+        end
+    endif
 endf
 
 fun! HardTimeToggle()
@@ -94,18 +111,36 @@ fun! HardTimeToggle()
 endf
 
 
-fun! TryKey()
+fun! TryKey(key)
     let now = GetNow()
 	if v:count > 0
 		return 1
 	end
-    if now > s:lasttime + g:hardtime_timeout
+    if (now > s:lasttime + g:hardtime_timeout/1000) || (g:hardtime_allow_different_key && a:key != s:lastkey) ||
+    \ (s:lastcount < g:hardtime_maxcount)
+        if (now > s:lasttime + g:hardtime_timeout/1000) || (g:hardtime_allow_different_key && a:key != s:lastkey)
+            let s:lastcount = 1
+        else
+            let s:lastcount += 1
+        endif
         let s:lasttime = now
+        let s:lastkey = a:key
         return 1
     else
         return 0
     endif
 endf
+
+fun! s:IsIgnoreBuffer()
+    let name = bufname("%")
+    for i in g:hardtime_ignore_buffer_patterns
+        if name =~ i
+            return 1
+        endif
+    endfor
+    return 0
+endf
+
 
 fun! TooSoon()
     if g:hardtime_showmsg

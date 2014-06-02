@@ -141,19 +141,6 @@ if has("gui_running")
 	au WinLeave * setlocal nocursorline
 endif
 
-" Repeat last recorded macro
-map Q @@
-" Reselect visual block after indent/outdent 
-vnoremap < <gv
-vnoremap > >gv
-" Easy split navigation
-nnoremap <C-h> <C-w>h
-nnoremap <C-j> <C-w>j
-nnoremap <C-k> <C-w>k
-nnoremap <C-l> <C-w>l
-" Force Saving Files that Require Root Permission
-cmap w!! %!sudo tee > /dev/null %
-
 " undofile - This allows you to use undos after exiting and restarting
 " This, like swap and backups, uses .vim-undo first, then ~/.vim/undo
 if exists("+undofile")

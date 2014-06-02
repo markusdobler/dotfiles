@@ -102,9 +102,13 @@ function get_git_changes () {
 			local git_changes_working_tree=$(echo "$git_status_porc" | grep -e "^.[DM]" | wc -l 2> /dev/null)
 			local git_changes_untracked=$(echo "$git_status_porc" | grep -e '??' | wc -l 2> /dev/null)
 
+			# How many stashes do we have?
+			local git_stashes="$(git stash list | wc -l 2> /dev/null)"
+
 			[[ $git_changes_staging_area -gt 0 ]] && vcs_changes="${vcs_changes}${git_changes_staging_area}s"
 			[[ $git_changes_working_tree -gt 0 ]] && vcs_changes="${vcs_changes}${git_changes_working_tree}w"
 			[[ $git_changes_untracked -gt 0 ]] && vcs_changes="${vcs_changes}${git_changes_untracked}u"
+			[[ $git_stashes -gt 0 ]] && vcs_changes="${vcs_changes}${git_stashes}#"
 			;;
 	esac
 }

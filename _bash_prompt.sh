@@ -90,9 +90,11 @@ function get_git_changes () {
 			# List conflicts (c), successful merges (m) and untracked files (u)
 			local git_changes_unmerged=$(echo "$git_status_porc" | grep -e "^[DAU][DAU]" | wc -l 2> /dev/null)
 			local git_changes_merged=$(echo "$git_status_porc" | grep -e "^[MADRC] " | wc -l 2> /dev/null)
+			local git_changes_working_tree=$(echo "$git_status_porc" | grep -e "^ [MADRC]" | wc -l 2> /dev/null)
 			local git_changes_untracked=$(echo "$git_status_porc" | grep -e '^??' | wc -l 2> /dev/null)
 			[[ $git_changes_unmerged -gt 0 ]] && vcs_changes="${vcs_changes}${magenta}${git_changes_unmerged}c${normal}"
 			[[ $git_changes_merged -gt 0 ]] && vcs_changes="${vcs_changes}${git_changes_merged}m"
+			[[ $git_changes_working_tree -gt 0 ]] && vcs_changes="${vcs_changes}${yellow}${git_changes_working_tree}w${normal}"
 			[[ $git_changes_untracked -gt 0 ]] && vcs_changes="${vcs_changes}${git_changes_untracked}u"
 			;;
 

@@ -1,4 +1,4 @@
-" TODO: create cssWritingModeProp group and cssWritingModeAttr group
+" TODO: create cssWritingModesProp group and cssWritingModesAttr group
 syn match cssFontProp contained "\<text-\(orientation\|combine-horizontal\)\>"
 syn match cssFontProp contained "\<writing-mode\>"
 syn keyword cssFontAttr contained before after mixed isolate plaintext

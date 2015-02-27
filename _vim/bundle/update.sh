@@ -9,7 +9,6 @@ git subtree pull --prefix _vim/bundle/Hemisu https://github.com/noahfrederick/He
 git subtree pull --prefix _vim/bundle/nerdtree https://github.com/scrooloose/nerdtree.git master --squash
 git subtree pull --prefix _vim/bundle/syntastic https://github.com/scrooloose/syntastic.git master --squash
 git subtree pull --prefix _vim/bundle/gundo.vim https://github.com/sjl/gundo.vim.git master --squash
-git subtree pull --prefix _vim/bundle/threesome.vim https://github.com/sjl/threesome.vim.git master --squash
 git subtree pull --prefix _vim/bundle/vim-haml https://github.com/tpope/vim-haml.git master --squash
 git subtree pull --prefix _vim/bundle/vim-surround https://github.com/tpope/vim-surround.git master --squash
 git subtree pull --prefix _vim/bundle/vim-unimpaired https://github.com/tpope/vim-unimpaired.git master --squash

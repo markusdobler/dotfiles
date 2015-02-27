@@ -84,35 +84,47 @@ function get_git_pending_operation () {
 }
 
 function get_git_changes () {
-	local git_status_porc="$(git status --porcelain 2> /dev/null)"
-	case "$git_op" in
-		rebase* | am* | merge* )
-			# List conflicts (c), successful merges (m) and untracked files (u)
-			local git_changes_unmerged=$(echo "$git_status_porc" | grep -e "^[DAU][DAU]" | wc -l 2> /dev/null)
-			local git_changes_merged=$(echo "$git_status_porc" | grep -e "^[MADRC] " | wc -l 2> /dev/null)
-			local git_changes_working_tree=$(echo "$git_status_porc" | grep -e "^ [MADRC]" | wc -l 2> /dev/null)
-			local git_changes_untracked=$(echo "$git_status_porc" | grep -e '^??' | wc -l 2> /dev/null)
-			[[ $git_changes_unmerged -gt 0 ]] && vcs_changes="${vcs_changes}${magenta}${git_changes_unmerged}c${normal}"
-			[[ $git_changes_merged -gt 0 ]] && vcs_changes="${vcs_changes}${git_changes_merged}m"
-			[[ $git_changes_working_tree -gt 0 ]] && vcs_changes="${vcs_changes}${yellow}${git_changes_working_tree}w${normal}"
-			[[ $git_changes_untracked -gt 0 ]] && vcs_changes="${vcs_changes}${git_changes_untracked}u"
-			;;
-
-		* )
-			# How many files are in the staging area (s), modified in the working tree (w) and untracked (u) ?
-			local git_changes_staging_area=$(echo "$git_status_porc" | grep -e "^[MADRC]." | wc -l 2> /dev/null)
-			local git_changes_working_tree=$(echo "$git_status_porc" | grep -e "^.[DM]" | wc -l 2> /dev/null)
-			local git_changes_untracked=$(echo "$git_status_porc" | grep -e '??' | wc -l 2> /dev/null)
-
-			# How many stashes do we have?
-			local git_stashes="$(git stash list | wc -l 2> /dev/null)"
-
-			[[ $git_changes_staging_area -gt 0 ]] && vcs_changes="${vcs_changes}${git_changes_staging_area}s"
-			[[ $git_changes_working_tree -gt 0 ]] && vcs_changes="${vcs_changes}${git_changes_working_tree}w"
-			[[ $git_changes_untracked -gt 0 ]] && vcs_changes="${vcs_changes}${git_changes_untracked}u"
-			[[ $git_stashes -gt 0 ]] && vcs_changes="${vcs_changes}${git_stashes}#"
-			;;
-	esac
+    local git_changes_unmerged
+	local git_changes_staging_area
+	local git_changes_working_tree
+	local git_changes_untracked
+	while read code path
+		do
+			case $code in
+				_[MD])
+					((git_changes_working_tree++))
+					;;
+				[MADRC] )
+					((git_changes_staging_area++))
+					;;
+				[MADRC][M] )
+					((git_changes_working_tree++))
+					((git_changes_staging_area++))
+					;;
+				[MARC][D] )
+					((git_changes_working_tree++))
+					((git_changes_staging_area++))
+					;;
+				[DAU][DAU] ) # "AD" is already caught in previous clause
+					((git_changes_unmerged++))
+					;;
+				'??' )
+					((git_changes_untracked++))
+					;;
+				'!!' )
+					# ignored
+					;;
+				* )
+					vcs_changes="${vcs_changes}${magenta}code=${code}${normal}"
+					;;
+			esac
+		done < <(git status --porcelain 2> /dev/null | sed 's/^ /_/')
+		local git_stashes="$(git stash list | wc -l 2> /dev/null)"
+		[[ $git_changes_unmerged -gt 0 ]] && vcs_changes="${vcs_changes}${magenta}${git_changes_unmerged}c${normal}"
+		[[ $git_changes_staging_area -gt 0 ]] && vcs_changes="${vcs_changes}${git_changes_staging_area}s"
+		[[ $git_changes_working_tree -gt 0 ]] && vcs_changes="${vcs_changes}${git_changes_working_tree}w"
+		[[ $git_changes_untracked -gt 0 ]] && vcs_changes="${vcs_changes}${git_changes_untracked}u"
+		[[ $git_stashes -gt 0 ]] && vcs_changes="${vcs_changes}${git_stashes}#"
 }
 
 function get_git_remote () {

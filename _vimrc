@@ -223,14 +223,6 @@ let g:tagbar_type_scala = {
 let g:hardtime_default_on = 0
 let g:hardtime_showmsg = 1
 
-" use < > as triggers for vim-unimpaired
-nmap < [
-nmap > ]
-omap < [
-omap > ]
-xmap < [
-xmap > ]
-
 " diverse key mappings
 
 " Repeat last recorded macro

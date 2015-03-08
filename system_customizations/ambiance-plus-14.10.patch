@@ -1,0 +1,34 @@
+diff -rupN /usr/share/themes/Ambiance/gtk-3.0/apps/unity.css /usr/share/themes/AmbiancePlus/gtk-3.0/apps/unity.css
+--- /usr/share/themes/Ambiance/gtk-3.0/apps/unity.css	2014-10-15 09:04:45.000000000 +0200
++++ /usr/share/themes/AmbiancePlus/gtk-3.0/apps/unity.css	2015-03-08 15:30:21.937170370 +0100
+@@ -31,8 +31,8 @@ UnityDecoration.top {
+     background-color: transparent;
+     background-clip: border-box;
+     background-image: -gtk-gradient (linear, left top, left bottom,
+-                                     from (shade (@dark_bg_color, 1.5)),
+-                                     to (shade (@dark_bg_color, 1.04)));
++                                     from (shade (@selected_bg_color, 0.7)),
++                                     to (@dark_bg_color));
+ 
+     color: @dark_fg_color;
+     text-shadow: 1px 0 #333, -1px 0 #333, 0 1px #333, 0 -1px #333;
+Binary files /usr/share/themes/Ambiance/gtk-3.0/apps/.unity.css.swp and /usr/share/themes/AmbiancePlus/gtk-3.0/apps/.unity.css.swp differ
+diff -rupN /usr/share/themes/Ambiance/index.theme /usr/share/themes/AmbiancePlus/index.theme
+--- /usr/share/themes/Ambiance/index.theme	2014-10-15 09:04:58.000000000 +0200
++++ /usr/share/themes/AmbiancePlus/index.theme	2015-03-08 15:12:25.145120996 +0100
+@@ -1,12 +1,12 @@
+ [Desktop Entry]
+ Type=X-GNOME-Metatheme
+ Name=Ambiance
+-Comment=Ubuntu Ambiance theme
++Comment=Ubuntu AmbiancePlus theme
+ Encoding=UTF-8
+ 
+ [X-GNOME-Metatheme]
+-GtkTheme=Ambiance
+-MetacityTheme=Ambiance
++GtkTheme=AmbiancePlus
++MetacityTheme=AmbiancePlus
+ IconTheme=ubuntu-mono-dark
+ CursorTheme=DMZ-White
+ ButtonLayout=close,minimize,maximize:

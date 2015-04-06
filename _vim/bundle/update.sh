@@ -22,3 +22,4 @@ git subtree pull --prefix _vim/bundle/vim-css-color https://github.com/skammer/v
 git subtree pull --prefix _vim/bundle/vim-css3-syntax https://github.com/hail2u/vim-css3-syntax.git master --squash
 git subtree pull --prefix _vim/bundle/vim-less https://github.com/groenewege/vim-less.git master --squash
 git subtree pull --prefix _vim/bundle/splice.vim https://github.com/sjl/splice.vim.git master --squash
+git subtree pull --prefix _vim/bundle/vim-indent-object https://github.com/michaeljsmith/vim-indent-object.git master --squash
